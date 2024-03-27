@@ -1,5 +1,6 @@
-import numpy as np
 from typing import Callable, Self
+
+import numpy as np
 
 
 class Function:

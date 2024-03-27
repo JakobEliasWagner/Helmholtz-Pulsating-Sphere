@@ -1,5 +1,7 @@
-import numpy as np
 from typing import Callable, List
+
+import numpy as np
+
 from .function import Function
 
 
@@ -33,6 +35,7 @@ class ParameterizedFunction:
         """
         funcs = []
         for param in parameters:
+
             def mapping(x, p=param):
                 return self.parameterized_mapping(p)(x)
 
