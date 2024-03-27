@@ -1,0 +1,68 @@
+[project]
+name = "hps"
+version = "1.0.0"
+description = "A project to generate big datasets of pulsating acoustic spheres."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+authors = [{ name = "Jakob Elias Wagner", email = "mail@jakob-wagner.org" }]
+maintainers = [{ name = "Jakob Elias Wagner", email = "mail@jakob-wagner.org" }]
+keywords = [
+    "Mathematics",
+    "Physics",
+    "Helmholtz",
+]
+
+
+classifiers = [
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Topic :: Scientific/Engineering :: Physics",
+    "Development Status :: 3 - Alpha",
+]
+
+dependencies = [
+    "numpy",
+    "pandas",
+    "matplotlib",
+    "seaborn",
+    "gmsh",
+    "h5py",
+    "black",
+    "ruff",
+    "isort",
+    "pre-commit",
+    "pytest",
+    "pytest-cov",
+    "sphinx",
+    "docker",
+    "loguru"
+]
+
+[build-system]
+requires = ["setuptools>=43.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["hps"]
+
+[tool.coverage]
+[tool.coverage.run]
+omit = [
+    # omit anything in a .local directory anywhere
+    '*/.local/*',
+    '__init__.py',
+    '.venv/*'
+]
+exclude_also = [
+    "raise AssertionError",
+    "raise NotImplementedError",
+    "@(abc\\.)?abstractmethod",
+]
+
+[tool.coverage.report]
+skip_empty = true
+
+[tool.pytest.ini_options]
+markers = [
+    "slow: marks tests as slow (> 5s)",
+]
