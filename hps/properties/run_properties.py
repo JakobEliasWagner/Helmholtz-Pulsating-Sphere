@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import List
+import numpy as np
 from hps.functions import Function
 from .domain_properties import DomainProperties
 from .mesh_properties import MeshProperties
@@ -12,5 +12,9 @@ class RunProperties:
     mesh: MeshProperties
     physics: PhysicsProperties
 
-    top_boundaries: List[Function]
-    right_boundaries: List[Function]
+    # parameters
+    frequencies: np.array
+    top_boundary: Function
+    top_parameters: np.array
+    right_boundary: Function
+    right_parameters: np.array
