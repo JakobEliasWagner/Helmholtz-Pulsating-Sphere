@@ -1,4 +1,5 @@
 import pathlib
+
 import gmsh
 import numpy as np
 
@@ -7,15 +8,19 @@ from hps.properties import RunProperties
 
 class MeshBuilder:
     def __init__(self, properties: RunProperties):
-        assert properties.domain.ndim == 2, 'This mesh builder only works in two dimensions.'
+        assert (
+            properties.domain.ndim == 2
+        ), "This mesh builder only works in two dimensions."
 
         self.properties = properties
         self.f = gmsh.model.occ
 
     def __call__(self, out_file: pathlib.Path):
         gmsh.initialize()
-        gmsh.option.setNumber("General.Verbosity", 1)  # set verbosity level (still prints warnings)
-        gmsh.model.add(f"Pulsating-Sphere")
+        gmsh.option.setNumber(
+            "General.Verbosity", 1
+        )  # set verbosity level (still prints warnings)
+        gmsh.model.add("Pulsating-Sphere")
 
         self.build_domain()
         self.set_physical_groups()
@@ -25,8 +30,14 @@ class MeshBuilder:
         gmsh.finalize()
 
     def build_domain(self):
-        box = self.f.add_rectangle(0., 0., 0., *self.properties.domain.box_lengths)
-        circ = self.f.add_disk(0., 0., 0., self.properties.domain.sphere_radius, self.properties.domain.sphere_radius)
+        box = self.f.add_rectangle(0.0, 0.0, 0.0, *self.properties.domain.box_lengths)
+        circ = self.f.add_disk(
+            0.0,
+            0.0,
+            0.0,
+            self.properties.domain.sphere_radius,
+            self.properties.domain.sphere_radius,
+        )
 
         self.f.cut([(2, box)], [(2, circ)])
 
@@ -42,9 +53,9 @@ class MeshBuilder:
         bl = self.properties.domain.box_lengths
         r = self.properties.domain.sphere_radius
         boundaries = {}
-        top_com = np.array([bl[0] / 2, bl[1], 0.])
-        right_com = np.array([bl[0], bl[1] / 2, 0.])
-        sphere_l_com = np.array([r, r, 0.])
+        top_com = np.array([bl[0] / 2, bl[1], 0.0])
+        right_com = np.array([bl[0], bl[1] / 2, 0.0])
+        sphere_l_com = np.array([r, r, 0.0])
         lines = self.f.get_entities(1)
         for line in lines:
             com = np.array(self.f.get_center_of_mass(*line))
@@ -75,7 +86,9 @@ class MeshBuilder:
         resolution_min = lmbda_min / self.properties.mesh.elements_per_wavelengths
 
         gmsh.option.setNumber("Mesh.MeshSizeMax", resolution_min)
-        gmsh.option.setNumber("Mesh.MeshSizeFromCurvature", self.properties.mesh.elements_per_radians)
+        gmsh.option.setNumber(
+            "Mesh.MeshSizeFromCurvature", self.properties.mesh.elements_per_radians
+        )
 
     def generate_mesh(self):
         self.f.synchronize()

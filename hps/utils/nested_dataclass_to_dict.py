@@ -1,12 +1,9 @@
-from dataclasses import (
-    fields,
-    is_dataclass,
-)
-import numpy as np
-from typing import (
-    Any,
-)
 import inspect
+from dataclasses import fields, is_dataclass
+from typing import Any
+
+import numpy as np
+
 from hps.functions import Function
 
 

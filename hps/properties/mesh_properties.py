@@ -3,8 +3,8 @@ from dataclasses import dataclass
 
 @dataclass
 class MeshProperties:
-    elements_per_wavelengths: float = 10.
-    elements_per_radians: float = 30.
+    elements_per_wavelengths: float = 10.0
+    elements_per_radians: float = 30.0
 
     # indices
     excitation_boundary: int = 101

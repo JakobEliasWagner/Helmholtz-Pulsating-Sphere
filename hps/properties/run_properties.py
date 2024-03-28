@@ -1,6 +1,9 @@
 from dataclasses import dataclass
+
 import numpy as np
+
 from hps.functions import Function
+
 from .domain_properties import DomainProperties
 from .mesh_properties import MeshProperties
 from .physics_properties import PhysicsProperties
