@@ -1,4 +1,3 @@
-from .functions import Function, ParameterizedFunction
 from .helmholtz import Helmholtz
 from .properties import (
     DomainProperties,
@@ -16,6 +15,5 @@ __all__ = [
     "Helmholtz",
     "UniqueId",
     "Function",
-    "ParameterizedFunction",
     "dataclass_to_dict",
 ]
