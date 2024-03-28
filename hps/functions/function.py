@@ -1,4 +1,5 @@
-from typing import Callable, Self
+from __future__ import annotations
+from typing import Callable
 
 import numpy as np
 
@@ -18,19 +19,6 @@ class Function:
     Args:
         mapping: A callable that accepts exactly one argument, a torch.Tensor, and returns a torch.Tensor. This
         callable represents the mathematical function to be applied on a PyTorch tensor.
-
-    Example:
-        ```python
-        f = Function(lambda x: x**2)
-        g = Function(lambda x: x + 1)
-        h = f + 2 * g
-        x = torch.tensor(2.0)
-        h(x)
-        ```
-        Output:
-        ```shell
-        tensor(10.)
-        ```
     """
 
     def __init__(self, mapping: Callable):
@@ -48,7 +36,7 @@ class Function:
         """
         return self.mapping(*args, **kwargs)
 
-    def __add__(self, other: Self) -> Self:
+    def __add__(self, other: Function) -> Function:
         """Creates a new Function representing the addition of this function with another.
 
         Args:
@@ -60,7 +48,7 @@ class Function:
         """
         return Function(mapping=lambda args: self.mapping(args) + other.mapping(args))
 
-    def __mul__(self, scalar: float) -> Self:
+    def __mul__(self, scalar: float) -> Function:
         """Creates a new Function representing the multiplication of this function with a scalar.
 
         Args:
@@ -71,5 +59,5 @@ class Function:
         """
         return Function(mapping=lambda args: scalar * self.mapping(args))
 
-    def __rmul__(self, scalar: float) -> Self:
+    def __rmul__(self, scalar: float) -> Function:
         return self.__mul__(scalar)
