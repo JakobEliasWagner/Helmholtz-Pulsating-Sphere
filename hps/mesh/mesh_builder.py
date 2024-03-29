@@ -82,7 +82,9 @@ class MeshBuilder:
             gmsh.model.add_physical_group(1, [tag], tag=idf)
 
     def set_mesh_properties(self):
-        lmbda_min = self.properties.physics.c / max(self.properties.frequencies)
+        lmbda_min = self.properties.physics.c / float(
+            self.properties.frequency_sampler.max_x
+        )
         resolution_min = lmbda_min / self.properties.mesh.elements_per_wavelengths
 
         gmsh.option.setNumber("Mesh.MeshSizeMax", resolution_min)
