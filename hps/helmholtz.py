@@ -44,6 +44,17 @@ class Helmholtz:
         v0 = 1e-3
 
         ds = ufl.Measure("ds", msh, subdomain_data=ft)
+        tdim = msh.topology.dim
+        top_tol = self.properties.domain.box_lengths[1] / 10
+        top_cells = dolfinx.mesh.locate_entities(
+            msh, tdim, lambda x: x[1] + top_tol >= self.properties.domain.box_lengths[1]
+        )
+        right_tol = self.properties.domain.box_lengths[0] / 10
+        right_cells = dolfinx.mesh.locate_entities(
+            msh,
+            tdim,
+            lambda x: x[0] + right_tol >= self.properties.domain.box_lengths[0],
+        )
 
         # Define variational problem
         p = ufl.TrialFunction(v)
@@ -74,9 +85,12 @@ class Helmholtz:
             )
         ):
             # interpolate boundaries
-            y_top.interpolate(lambda x: self.properties.top_boundary(top_param)(x))
+            y_top.interpolate(
+                lambda x: self.properties.top_boundary(top_param)(x), cells=top_cells
+            )
             y_right.interpolate(
-                lambda x: self.properties.right_boundary(right_param)(x)
+                lambda x: self.properties.right_boundary(right_param)(x),
+                cells=right_cells,
             )
 
             # setup physics
@@ -87,22 +101,25 @@ class Helmholtz:
             # setup problem
             lhs = (
                 ufl.inner(ufl.grad(p), ufl.grad(xi)) * ufl.dx
-                - ks * ufl.inner(p, xi) * ufl.dx
-                - s
-                * k
-                * y_top
-                * ufl.inner(p, xi)
-                * ds(self.properties.mesh.top_boundary)
-                - s
-                * k
-                * y_right
-                * ufl.inner(p, xi)
-                * ds(self.properties.mesh.right_boundary)
+                - (ks * ufl.inner(p, xi) * ufl.dx)
+                - (
+                    s
+                    * k
+                    * y_top
+                    * ufl.inner(p, xi)
+                    * ds(self.properties.mesh.top_boundary)
+                )
+                - (
+                    s
+                    * k
+                    * y_right
+                    * ufl.inner(p, xi)
+                    * ds(self.properties.mesh.right_boundary)
+                )
             )
             rhs = (
                 s * k * ufl.inner(v0, xi) * ds(self.properties.mesh.excitation_boundary)
             )
-
             # compute solution
             problem = LinearProblem(
                 lhs,
