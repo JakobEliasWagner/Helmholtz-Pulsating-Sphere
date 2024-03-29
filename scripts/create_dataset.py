@@ -1,8 +1,6 @@
 import pathlib
 import time
 
-import numpy as np
-
 import hps
 
 
@@ -13,25 +11,29 @@ def main():
     phy = hps.PhysicsProperties()
 
     # boundaries
-    n_samples = 2**9
     # top boundary
-    top_parameters = np.random.rand(n_samples, 2)
+    top_sampler = hps.UniformSampler([0, -1], [1, 0])
     top_func = hps.Function(lambda a: lambda x: x[0] * 0 + a[0] - 1j * a[1])
 
     # right boundary
-    right_parameters = np.random.rand(n_samples, 2)
+    right_sampler = hps.UniformSampler([0, -1], [1, 0])
     right_func = hps.Function(lambda a: lambda x: x[0] * 0 + a[0] - 1j * a[1])
 
+    # frequencies
+    frequency_sampler = hps.UniformSampler([100], [500])
+
     # assemble run description
+    n_observations = 2**5
     run = hps.RunProperties(
         domain=dom,
         mesh=msh,
         physics=phy,
-        frequencies=np.linspace(100, 500, 257),
+        frequency_sampler=frequency_sampler,
+        top_sampler=top_sampler,
         top_boundary=top_func,
-        top_parameters=top_parameters,
+        right_sampler=right_sampler,
         right_boundary=right_func,
-        right_parameters=right_parameters,
+        n_observations=n_observations,
     )
 
     # setup helmholtz configuration
