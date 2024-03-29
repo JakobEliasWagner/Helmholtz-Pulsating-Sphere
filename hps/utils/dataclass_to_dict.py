@@ -4,7 +4,7 @@ from typing import Any
 
 import numpy as np
 
-from hps.functions import Function
+from hps.functions import Function, Sampler
 
 
 def dataclass_to_dict(obj: Any) -> Any:
@@ -31,5 +31,11 @@ def dataclass_to_dict(obj: Any) -> Any:
         return {key: dataclass_to_dict(value) for key, value in obj.items()}
     elif isinstance(obj, Function):
         return inspect.getsource(obj.mapping)
+    elif isinstance(obj, Sampler):
+        return {
+            "type": obj.__class__.__name__,
+            "x_min": obj.min_x.tolist(),
+            "x_max": obj.max_x.tolist(),
+        }
     else:
         return obj
