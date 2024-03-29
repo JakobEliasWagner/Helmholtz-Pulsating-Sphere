@@ -1,5 +1,6 @@
 import pathlib
-import time
+
+import numpy as np
 
 import hps
 
@@ -13,17 +14,21 @@ def main():
     # boundaries
     # top boundary
     top_sampler = hps.UniformSampler([0, -1], [1, 0])
-    top_func = hps.Function(lambda a: lambda x: x[0] * 0 + a[0] - 1j * a[1])
+    top_func = hps.Function(
+        lambda a: lambda x: np.ones(x[0].shape) * a[0] + 1j * a[1] * np.ones(x[0].shape)
+    )
 
     # right boundary
     right_sampler = hps.UniformSampler([0, -1], [1, 0])
-    right_func = hps.Function(lambda a: lambda x: x[0] * 0 + a[0] - 1j * a[1])
+    right_func = hps.Function(
+        lambda a: lambda x: np.ones(x[1].shape) * a[1] + 1j * a[1] * np.ones(x[1].shape)
+    )
 
     # frequencies
     frequency_sampler = hps.UniformSampler([100], [500])
 
     # assemble run description
-    n_observations = 2**5
+    n_observations = 2**6
     run = hps.RunProperties(
         domain=dom,
         mesh=msh,
@@ -45,10 +50,7 @@ def main():
     out_dir.mkdir(parents=True, exist_ok=False)
 
     # run
-    start = time.time()
     h(out_dir)
-    end = time.time()
-    print(f"Execution took {end - start}s")
 
 
 if __name__ == "__main__":
