@@ -35,6 +35,14 @@ class RunProperties:
         top_samples = self.top_sampler(n_samples=self.n_observations)
         right_samples = self.right_sampler(n_samples=self.n_observations)
 
+        if self.n_observations == 1:
+            self.top_samples = top_samples.reshape(1, 2)
+            self.right_samples = right_samples.reshape(1, 2)
+            self.frequency_samples = frequency_samples.reshape(
+                1,
+            )
+            return
+
         # preprocess initial (unscaled dimensionality leads to inf distance)
         fs = (frequency_samples.reshape(-1, 1) - np.min(frequency_samples)) / (
             np.max(frequency_samples) - np.min(frequency_samples)
