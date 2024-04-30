@@ -1,3 +1,4 @@
+from .dataset import HelmholtzDataset
 from .functions import Function, Sampler, UniformSampler
 from .helmholtz import Helmholtz
 from .properties import (
@@ -19,4 +20,5 @@ __all__ = [
     "dataclass_to_dict",
     "UniformSampler",
     "Sampler",
+    "HelmholtzDataset",
 ]
