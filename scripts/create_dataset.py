@@ -7,28 +7,28 @@ import hps
 
 def main():
     # run properties
-    msh = hps.MeshProperties()
+    msh = hps.MeshProperties(elements_per_wavelengths=10)
     dom = hps.DomainProperties()
     phy = hps.PhysicsProperties()
 
     # boundaries
     # top boundary
-    top_sampler = hps.UniformSampler([0, -1], [1, 0])
+    top_sampler = hps.UniformSampler([0.0, -1.0], [1.0, 0.0])
     top_func = hps.Function(
         lambda a: lambda x: np.ones(x[0].shape) * a[0] + 1j * a[1] * np.ones(x[0].shape)
     )
 
     # right boundary
-    right_sampler = hps.UniformSampler([0, -1], [1, 0])
+    right_sampler = hps.UniformSampler([0.0, -1.0], [1.0, 0.0])
     right_func = hps.Function(
-        lambda a: lambda x: np.ones(x[1].shape) * a[1] + 1j * a[1] * np.ones(x[1].shape)
+        lambda a: lambda x: np.ones(x[1].shape) * a[0] + 1j * a[1] * np.ones(x[1].shape)
     )
 
     # frequencies
-    frequency_sampler = hps.UniformSampler([100], [500])
+    frequency_sampler = hps.UniformSampler([400.0], [500.0])
 
     # assemble run description
-    n_observations = 2**6
+    n_observations = 2**12
     run = hps.RunProperties(
         domain=dom,
         mesh=msh,
