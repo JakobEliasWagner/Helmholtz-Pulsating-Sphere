@@ -89,11 +89,19 @@ class Helmholtz:
             lhs = (
                 ufl.inner(ufl.grad(p), ufl.grad(xi)) * ufl.dx
                 - (ks * ufl.inner(p, xi) * ufl.dx)
-                - (s * k * y_top * ufl.inner(p, xi) * ds(properties.mesh.top_boundary))
+                - (
+                    s
+                    * k
+                    * y_top
+                    / (properties.physics.rho * properties.physics.c)
+                    * ufl.inner(p, xi)
+                    * ds(properties.mesh.top_boundary)
+                )
                 - (
                     s
                     * k
                     * y_right
+                    / (properties.physics.rho * properties.physics.c)
                     * ufl.inner(p, xi)
                     * ds(properties.mesh.right_boundary)
                 )
