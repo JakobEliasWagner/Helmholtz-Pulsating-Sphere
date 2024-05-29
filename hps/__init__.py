@@ -1,5 +1,5 @@
 from .dataset import HelmholtzDataset
-from .functions import Function, Sampler, UniformSampler
+from .functions import Function, MeshGrid, Sampler, UniformSampler
 from .helmholtz import Helmholtz
 from .properties import (
     DomainProperties,
@@ -14,6 +14,7 @@ __all__ = [
     "DomainProperties",
     "PhysicsProperties",
     "RunProperties",
+    "MeshGrid",
     "Helmholtz",
     "UniqueId",
     "Function",

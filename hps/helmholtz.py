@@ -74,35 +74,30 @@ class Helmholtz:
             f = properties.frequency_samples[idx]
 
             # derive physics parameters
-            wave_length = properties.physics.c / f
-            k = 2 * np.pi / wave_length
+            omega = 2 * np.pi * f
+            k = omega / properties.physics.c
             ks = k**2
             y_top.interpolate(
-                lambda x: properties.top_boundary(top_params)(x), cells=top_cells
+                lambda x: properties.top_boundary(top_params)(x)
+                / (properties.physics.rho * properties.physics.c),
+                cells=top_cells,
             )
             y_right.interpolate(
-                lambda x: properties.right_boundary(right_params)(x),
+                lambda x: properties.right_boundary(right_params)(x)
+                / (properties.physics.rho * properties.physics.c),
                 cells=right_cells,
             )
 
             # setup problem
             lhs = (
-                ufl.inner(ufl.grad(p), ufl.grad(xi)) * ufl.dx
+                (ufl.inner(ufl.grad(p), ufl.grad(xi)) * ufl.dx)
                 - (ks * ufl.inner(p, xi) * ufl.dx)
+                - (s * k * p * ufl.inner(y_top, xi) * ds(properties.mesh.top_boundary))
                 - (
                     s
                     * k
-                    * y_top
-                    / (properties.physics.rho * properties.physics.c)
-                    * ufl.inner(p, xi)
-                    * ds(properties.mesh.top_boundary)
-                )
-                - (
-                    s
-                    * k
-                    * y_right
-                    / (properties.physics.rho * properties.physics.c)
-                    * ufl.inner(p, xi)
+                    * p
+                    * ufl.inner(y_right, xi)
                     * ds(properties.mesh.right_boundary)
                 )
             )

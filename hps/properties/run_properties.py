@@ -3,7 +3,7 @@ from dataclasses import dataclass, field
 import numpy as np
 from scipy.spatial.distance import cdist
 
-from hps.functions import Function, UniformSampler
+from hps.functions import Function, Sampler
 
 from .domain_properties import DomainProperties
 from .mesh_properties import MeshProperties
@@ -18,11 +18,11 @@ class RunProperties:
 
     # parameters
     n_observations: int
-    frequency_sampler: UniformSampler
+    frequency_sampler: Sampler
     top_boundary: Function
-    top_sampler: UniformSampler
+    top_sampler: Sampler
     right_boundary: Function
-    right_sampler: UniformSampler
+    right_sampler: Sampler
 
     # derived parameters
     frequency_samples: np.array = field(init=False)
